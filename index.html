@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            background: #000;
+        }
+        
+        #scaryGif {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Страшный гиф (замените на свой URL) -->
+    <img id="scaryGif" src="https://funik.ru/wp-content/uploads/2023/11/6c7f0c40648b60314923.gif" alt="">
+
+
+    <script>
+        // Устанавливаем максимальную громкость
+        document.getElementById('scarySound').volume = 1.0;
+        
+        // Обход блокировки автовоспроизведения
+        document.addEventListener('DOMContentLoaded', function() {
+            const audio = document.getElementById('scarySound');
+            
+            // Попытка воспроизвести звук сразу
+            const playPromise = audio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    // Если заблокировано, воспроизводим при любом взаимодействии
+                    const playOnInteraction = () => {
+                        audio.play();
+                        document.removeEventListener('click', playOnInteraction);
+                        document.removeEventListener('touchstart', playOnInteraction);
+                        document.removeEventListener('keydown', playOnInteraction);
+                    };
+                    
+                    document.addEventListener('click', playOnInteraction);
+                    document.addEventListener('touchstart', playOnInteraction);
+                    document.addEventListener('keydown', playOnInteraction);
+                });
+            }
+        });
+        
+        // Запрет контекстного меню
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+        
+        // Запрет выделения текста
+        document.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+        });
+        
+        // Автоматический полноэкранный режим при клике
+        document.addEventListener('click', function() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        });
+        
+        // Запускаем полноэкранный режим автоматически через секунду
+        setTimeout(() => {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        }, 100);
+    </script>
+</body>
+</html>
